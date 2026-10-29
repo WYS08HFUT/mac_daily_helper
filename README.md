@@ -48,7 +48,7 @@ Git itself has tags, not releases. GitHub Releases attach a downloadable file (f
 
    ```bash
    ./build.sh
-   ditto -c -k --keepParent build/DailyHelp.app DailyHelp-v1.0.0.zip
+   (cd build && zip -r -X ../DailyHelp-v1.0.0.zip DailyHelp.app)
    ```
 
 4. Commit, tag, and push:
