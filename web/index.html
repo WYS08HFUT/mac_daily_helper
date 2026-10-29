@@ -1,0 +1,1435 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mac 文件命令 · 日常速查</title>
+<script>
+  try {
+    var savedTheme = localStorage.getItem('mac-file-commands:theme');
+    document.documentElement.dataset.theme = (savedTheme === 'light' || savedTheme === 'dark')
+      ? savedTheme
+      : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  } catch (e) {
+    document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+</script>
+<style>
+  :root {
+    color-scheme: light;
+    --desktop-bg: #dfe7f2;
+    --window: #ffffff;
+    --titlebar: rgba(247, 248, 250, .9);
+    --sidebar: #f1f3f6;
+    --main: #ffffff;
+    --detail: #fafbfc;
+    --text: #1e2632;
+    --text-2: #5f6b7a;
+    --text-3: #98a0ac;
+    --border: #e3e7ec;
+    --border-strong: #d5dbe3;
+    --accent: #0a5bd3;
+    --accent-fg: #ffffff;
+    --accent-soft: #eaf2ff;
+    --accent-border: #c9ddfb;
+    --code-bg: #111a2a;
+    --code-text: #d6e4f8;
+    --code-muted: #8fa1ba;
+    --warn-bg: #fff8e8;
+    --warn-border: #f0b64b;
+    --warn-text: #8a713d;
+    --danger: #d63b3b;
+    --native-bg: #e8f8ed;
+    --native-fg: #1b7f3b;
+    --install-bg: #fff3db;
+    --install-fg: #9a6515;
+    --neutral-bg: #eef0f3;
+    --neutral-fg: #6d7683;
+    --gold: #d99a19;
+    --shadow: 0 24px 70px rgba(31, 45, 70, .18), 0 2px 8px rgba(31, 45, 70, .08);
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    --mono: "SF Mono", "Menlo", "Monaco", "Cascadia Code", monospace;
+  }
+  html[data-theme="dark"] {
+    color-scheme: dark;
+    --desktop-bg: #11161f;
+    --window: #1c1c1e;
+    --titlebar: rgba(28, 28, 30, .9);
+    --sidebar: #2a2a2c;
+    --main: #1c1c1e;
+    --detail: #242426;
+    --text: #f5f5f7;
+    --text-2: #b0b3b8;
+    --text-3: #8a8d92;
+    --border: #38383a;
+    --border-strong: #48484a;
+    --accent: #64a8ff;
+    --accent-fg: #081120;
+    --accent-soft: rgba(100, 168, 255, .14);
+    --accent-border: rgba(100, 168, 255, .3);
+    --code-bg: #0b0f16;
+    --code-text: #d6e4f8;
+    --code-muted: #8fa1ba;
+    --warn-bg: rgba(240, 182, 75, .12);
+    --warn-border: #d8a13c;
+    --warn-text: #e7c37f;
+    --danger: #ff6961;
+    --native-bg: rgba(52, 199, 89, .14);
+    --native-fg: #67d98b;
+    --install-bg: rgba(255, 159, 10, .14);
+    --install-fg: #ffc46b;
+    --neutral-bg: rgba(255, 255, 255, .08);
+    --neutral-fg: #b8bcc2;
+    --gold: #ffd166;
+    --shadow: 0 24px 70px rgba(0, 0, 0, .46), 0 2px 8px rgba(0, 0, 0, .26);
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { min-height: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 24px;
+    display: grid;
+    place-items: center;
+    font-family: var(--font);
+    color: var(--text);
+    background:
+      radial-gradient(1100px 600px at 12% 0%, rgba(178, 205, 245, .72), transparent 60%),
+      radial-gradient(900px 600px at 92% 100%, rgba(246, 214, 190, .5), transparent 55%),
+      linear-gradient(135deg, #dfe7f2 0%, #eef2f6 52%, #f4efe9 100%);
+    -webkit-font-smoothing: antialiased;
+  }
+  html[data-theme="dark"] body {
+    background:
+      radial-gradient(1100px 600px at 12% 0%, rgba(44, 74, 120, .5), transparent 60%),
+      radial-gradient(900px 600px at 92% 100%, rgba(90, 60, 42, .32), transparent 55%),
+      linear-gradient(135deg, #11161f 0%, #151a22 52%, #1a1716 100%);
+  }
+  button, input { font: inherit; }
+  button { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .app {
+    width: min(1320px, 100%);
+    height: min(880px, calc(100vh - 48px));
+    height: min(880px, calc(100dvh - 48px));
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--window);
+    border: 1px solid rgba(255, 255, 255, .55);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+  }
+  html[data-theme="dark"] .app { border-color: rgba(255, 255, 255, .08); }
+
+  /* ---------- titlebar ---------- */
+  .titlebar {
+    flex: 0 0 auto;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 15px;
+    background: var(--titlebar);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .traffic { display: flex; gap: 7px; flex: 0 0 auto; }
+  .light { width: 12px; height: 12px; border-radius: 50%; display: block; }
+  .light.red { background: #ff5f57; }
+  .light.yellow { background: #febc2e; }
+  .light.green { background: #28c840; }
+  .app-id { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 0 0 auto; }
+  .app-mark {
+    width: 25px; height: 25px; border-radius: 7px;
+    display: grid; place-items: center;
+    background: linear-gradient(145deg, #2f8cff, #0a5bd3);
+    color: #fff; font-size: 14px; font-weight: 700;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+  }
+  .app-name { font-size: 12.5px; font-weight: 650; letter-spacing: -.015em; white-space: nowrap; }
+  .search-wrap {
+    flex: 0 1 480px;
+    min-width: 140px;
+    margin-left: auto;
+    position: relative;
+    display: block;
+  }
+  .search-icon {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    color: var(--text-3); font-size: 13px; pointer-events: none;
+  }
+  #search {
+    width: 100%;
+    height: 30px;
+    padding: 0 48px 0 28px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--main);
+    color: var(--text);
+    font-size: 11px;
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+    appearance: none;
+  }
+  #search::placeholder { color: var(--text-3); }
+  #search:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
+  }
+  .search-wrap kbd {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    font-family: var(--mono); font-size: 8.5px; color: var(--text-3);
+    border: 1px solid var(--border); border-radius: 4px; padding: 2px 4px;
+    background: var(--main); pointer-events: none;
+  }
+  .titlebar-actions { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+  .icon-btn {
+    width: 30px; height: 30px; display: grid; place-items: center;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: transparent; color: var(--text-2); cursor: pointer;
+    font-size: 13px; line-height: 1; transition: background .15s ease, border-color .15s ease;
+  }
+  .icon-btn:hover { background: var(--accent-soft); border-color: var(--accent-border); color: var(--accent); }
+
+  /* ---------- app body ---------- */
+  .app-body {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 208px minmax(0, 1fr) 318px;
+  }
+
+  /* ---------- sidebar ---------- */
+  .sidebar {
+    min-height: 0;
+    overflow-y: auto;
+    padding: 14px 10px 12px;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  .side-label { padding: 0 8px 6px; font-size: 9.5px; color: var(--text-3); letter-spacing: .03em; }
+  #category-nav { display: flex; flex-direction: column; gap: 1px; }
+  .side-item {
+    width: 100%;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px;
+    border: 0; border-radius: 7px;
+    background: transparent; color: var(--text-2);
+    font-size: 11px; text-align: left; cursor: pointer;
+    transition: background .12s ease, color .12s ease;
+  }
+  .side-item:hover { background: color-mix(in srgb, var(--text) 5%, transparent); }
+  .side-item.active { background: var(--accent-soft); color: var(--accent); font-weight: 650; }
+  .side-item .count {
+    margin-left: auto; font-size: 9px; font-weight: 400; color: var(--text-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .side-item.active .count { color: var(--accent); }
+  .tag-dot { width: 7px; height: 7px; border-radius: 2px; flex: 0 0 auto; }
+  .side-sep { height: 1px; margin: 10px 4px; background: var(--border); }
+  .install-card {
+    margin-top: auto; padding: 9px 9px;
+    display: block; width: 100%; text-align: left;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--main); cursor: pointer;
+    color: var(--text-2); font-size: 9px;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .install-card:hover { border-color: var(--accent-border); background: var(--accent-soft); }
+  .install-title { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; color: var(--text); }
+  .install-cmd { margin-top: 5px; font-family: var(--mono); font-size: 8.5px; color: var(--text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---------- main list ---------- */
+  .main { min-width: 0; min-height: 0; display: flex; flex-direction: column; background: var(--main); }
+  .main-head {
+    flex: 0 0 auto;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    padding: 17px 20px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .main-title { margin: 0; font-size: 19px; font-weight: 680; letter-spacing: -.035em; line-height: 1.15; }
+  .main-sub { margin: 3px 0 0; font-size: 9.5px; color: var(--text-3); line-height: 1.4; }
+  .clear-search {
+    flex: 0 0 auto; font-size: 9px; color: var(--accent);
+    border: 1px solid var(--accent-border); border-radius: 999px;
+    background: var(--accent-soft); padding: 4px 8px; cursor: pointer;
+  }
+  .list {
+    flex: 1; min-height: 0; overflow-y: auto;
+    padding: 3px 8px 14px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .group-head {
+    display: flex; align-items: center; gap: 7px;
+    padding: 12px 9px 5px;
+    font-size: 9.5px; font-weight: 650; color: var(--text-3);
+  }
+  .group-count { margin-left: auto; font-size: 8.5px; font-weight: 400; color: var(--text-3); font-variant-numeric: tabular-nums; }
+  .cmd-row {
+    display: grid;
+    grid-template-columns: 33px minmax(0, 1fr) auto 26px;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 9px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background .12s ease, border-color .12s ease;
+  }
+  .cmd-row:hover { background: color-mix(in srgb, var(--text) 4%, transparent); }
+  .cmd-row.selected { background: var(--accent-soft); border-color: var(--accent-border); }
+  .row-icon {
+    width: 30px; height: 30px; border-radius: 6px;
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 7.5px; font-weight: 600; letter-spacing: .02em;
+    color: var(--cat, var(--accent));
+    background: color-mix(in srgb, var(--cat, var(--accent)) 12%, var(--main));
+    border: 1px solid color-mix(in srgb, var(--cat, var(--accent)) 24%, transparent);
+  }
+  .row-main { min-width: 0; }
+  .row-title { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; font-weight: 650; color: var(--text); line-height: 1.3; }
+  .row-desc { margin-top: 1px; font-size: 9.5px; color: var(--text-3); line-height: 1.35; }
+  .row-cmd {
+    display: block;
+    margin-top: 3px;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    font-family: var(--mono); font-size: 9px; color: var(--text-2);
+  }
+  .badge {
+    flex: 0 0 auto; font-size: 8px; font-weight: 500; line-height: 1;
+    padding: 3px 5px; border-radius: 4px; white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .badge.native { background: var(--native-bg); color: var(--native-fg); }
+  .badge.install { background: var(--install-bg); color: var(--install-fg); }
+  .badge.neutral { background: var(--neutral-bg); color: var(--neutral-fg); }
+  .row-copy {
+    font-size: 8.5px; line-height: 1; color: var(--accent);
+    border: 1px solid var(--accent-border); border-radius: 5px;
+    background: var(--main); padding: 4px 6px; cursor: pointer;
+    white-space: nowrap; opacity: .8;
+  }
+  .row-copy:hover { opacity: 1; background: var(--accent-soft); }
+  .star {
+    width: 26px; height: 26px; padding: 0;
+    display: grid; place-items: center;
+    border: 0; border-radius: 5px; background: transparent;
+    color: var(--text-3); font-size: 16px; line-height: 1;
+    cursor: pointer;
+  }
+  .star:hover { background: color-mix(in srgb, var(--text) 6%, transparent); color: var(--gold); }
+  .star.active { color: var(--gold); }
+
+  .empty-state {
+    flex: 1; min-height: 0;
+    display: grid; place-items: center; align-content: center;
+    gap: 6px; padding: 48px 22px; text-align: center;
+  }
+  .empty-icon {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 21px; margin-bottom: 2px;
+  }
+  .empty-state strong { font-size: 12.5px; font-weight: 650; }
+  .empty-state p { margin: 0; max-width: 260px; font-size: 10px; line-height: 1.55; color: var(--text-3); }
+
+  /* ---------- detail ---------- */
+  .detail {
+    min-width: 0; min-height: 0; overflow-y: auto;
+    padding: 19px 17px 28px;
+    background: var(--detail);
+    border-left: 1px solid var(--border);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .detail-close {
+    display: none;
+    position: absolute; top: 9px; right: 9px;
+    width: 28px; height: 28px; place-items: center;
+    border: 1px solid var(--border); border-radius: 50%;
+    background: var(--main); color: var(--text-2);
+    font-size: 16px; line-height: 1; cursor: pointer; z-index: 2;
+  }
+  .detail-kicker { font-size: 8.5px; color: var(--text-3); letter-spacing: .03em; margin-bottom: 8px; }
+  .detail-title-row { display: flex; align-items: flex-start; gap: 9px; padding-right: 18px; }
+  .detail-icon {
+    width: 37px; height: 37px; border-radius: 8px; flex: 0 0 auto;
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 8px; font-weight: 600;
+    color: var(--cat, var(--accent));
+    background: color-mix(in srgb, var(--cat, var(--accent)) 12%, var(--main));
+    border: 1px solid color-mix(in srgb, var(--cat, var(--accent)) 24%, transparent);
+  }
+  .detail-title { margin: 0; font-size: 21px; font-weight: 690; letter-spacing: -.035em; line-height: 1.18; }
+  .detail-sub { margin-top: 3px; font-size: 9.5px; color: var(--text-3); }
+  .badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+  .detail-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+    padding: 6px 9px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--main); color: var(--text-2);
+    font-size: 9.5px; line-height: 1; cursor: pointer;
+  }
+  .btn:hover { border-color: var(--accent-border); color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); font-weight: 650; }
+  .btn.primary:hover { filter: brightness(1.05); color: var(--accent-fg); }
+  .btn.ghost.active { color: var(--gold); border-color: color-mix(in srgb, var(--gold) 45%, var(--border)); }
+  .detail-desc { margin: 13px 0 0; font-size: 10px; line-height: 1.65; color: var(--text-2); }
+  .section-label { margin: 16px 0 7px; font-size: 9px; font-weight: 650; color: var(--text-3); letter-spacing: .03em; }
+  .code-card { overflow: hidden; border-radius: 8px; background: var(--code-bg); }
+  .code-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 6px 9px; border-bottom: 1px solid rgba(255, 255, 255, .08);
+    font-size: 8.5px; color: var(--code-muted);
+  }
+  .code-copy {
+    border: 0; background: transparent; color: #9fc3ff;
+    font-size: 8.5px; cursor: pointer; padding: 0;
+  }
+  .code-copy:hover { color: #d6e4f8; }
+  .detail-code {
+    margin: 0; padding: 10px;
+    white-space: pre-wrap; word-break: break-word;
+    font-family: var(--mono); font-size: 9.5px; line-height: 1.65; color: var(--code-text);
+  }
+  .params { border-top: 1px solid var(--border); }
+  .param {
+    display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 8px;
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+    font-size: 9px; line-height: 1.45; color: var(--text-3);
+  }
+  .param code { font-family: var(--mono); font-size: 8.5px; color: var(--accent); overflow-wrap: anywhere; }
+  .note {
+    margin-top: 13px; padding: 8px 9px;
+    border-left: 2px solid var(--accent);
+    border-radius: 0 5px 5px 0;
+    background: var(--accent-soft);
+    font-size: 9px; line-height: 1.6; color: var(--text-2);
+  }
+  .note.warn { border-left-color: var(--warn-border); background: var(--warn-bg); color: var(--warn-text); }
+  .note code, .variant-note code {
+    padding: 1px 3px; border-radius: 3px;
+    background: color-mix(in srgb, var(--text) 7%, transparent);
+    font-family: var(--mono); font-size: .92em; color: var(--accent);
+  }
+  .note.warn code { color: var(--warn-text); }
+  .variants { margin-top: 4px; }
+  .variant { margin-top: 9px; }
+  .variant-label { margin-bottom: 5px; font-size: 9px; font-weight: 650; color: var(--text-2); }
+  .variant-note { margin-top: 5px; font-size: 8.5px; line-height: 1.55; color: var(--text-3); }
+  .detail-footnote {
+    margin-top: 16px; padding-top: 11px;
+    border-top: 1px dashed var(--border-strong);
+    font-size: 8.5px; line-height: 1.6; color: var(--text-3);
+  }
+  .detail-footnote code {
+    padding: 1px 3px; border-radius: 3px;
+    background: color-mix(in srgb, var(--text) 7%, transparent);
+    font-family: var(--mono); font-size: .92em; color: var(--accent);
+  }
+  .detail-placeholder {
+    min-height: 240px; display: grid; place-items: center; align-content: center;
+    gap: 7px; text-align: center; color: var(--text-3);
+    font-size: 9.5px; line-height: 1.55;
+  }
+  .detail-placeholder .empty-icon { margin-bottom: 0; }
+
+  /* ---------- status bar ---------- */
+  .statusbar {
+    flex: 0 0 auto;
+    height: 28px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 0 14px;
+    overflow: hidden;
+    background: var(--titlebar);
+    border-top: 1px solid var(--border);
+    font-size: 8.5px; color: var(--text-3); white-space: nowrap;
+  }
+  .statusbar > span { overflow: hidden; text-overflow: ellipsis; }
+  .status-left { display: flex; align-items: center; gap: 6px; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #34c759; flex: 0 0 auto; }
+  .status-keys { font-family: var(--mono); }
+  .status-mid { color: var(--text-3); }
+
+  /* ---------- mobile detail sheet + help modal ---------- */
+  .sheet-backdrop {
+    display: none;
+    position: fixed; inset: 0; z-index: 40;
+    background: rgba(10, 16, 26, .38);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .sheet-backdrop.show { display: block; }
+  body.sheet-open { overflow: hidden; }
+
+  .modal {
+    position: fixed; inset: 0; z-index: 60;
+    display: grid; place-items: center; padding: 20px;
+    background: rgba(10, 16, 26, .42);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .modal-card {
+    width: min(560px, 100%);
+    max-height: min(82vh, 700px);
+    overflow-y: auto;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--main);
+    box-shadow: var(--shadow);
+  }
+  .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .modal-title { margin: 0; font-size: 18px; font-weight: 680; letter-spacing: -.03em; }
+  .modal-sub { margin: 4px 0 0; font-size: 9.5px; line-height: 1.55; color: var(--text-3); }
+  .modal-close {
+    flex: 0 0 auto; width: 27px; height: 27px; display: grid; place-items: center;
+    border: 1px solid var(--border); border-radius: 50%;
+    background: var(--main); color: var(--text-2); font-size: 15px; line-height: 1; cursor: pointer;
+  }
+  .help-list { margin-top: 15px; border-top: 1px solid var(--border); }
+  .help-item {
+    display: grid; grid-template-columns: 124px minmax(0, 1fr); gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    font-size: 9.5px; line-height: 1.55; color: var(--text-2);
+  }
+  .help-item code { font-family: var(--mono); font-size: 9px; color: var(--accent); overflow-wrap: anywhere; }
+  .help-warning {
+    margin-top: 14px; padding: 9px 10px;
+    border-left: 2px solid var(--warn-border); background: var(--warn-bg);
+    font-size: 9.5px; line-height: 1.6; color: var(--warn-text);
+  }
+  .help-source { margin-top: 13px; font-size: 8.5px; line-height: 1.6; color: var(--text-3); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; z-index: 80;
+    max-width: min(420px, calc(100vw - 32px));
+    padding: 8px 13px;
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 999px;
+    background: #111a2a; color: #f5f8ff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .22);
+    font-size: 9.5px; line-height: 1.3; text-align: center;
+    opacity: 0; pointer-events: none;
+    transform: translateX(-50%) translateY(8px);
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 1180px) {
+    .status-mid { display: none; }
+  }
+  @media (max-width: 1080px) {
+    .app-body { grid-template-columns: 190px minmax(0, 1fr) 285px; }
+    .detail { padding-left: 14px; padding-right: 14px; }
+  }
+  @media (max-width: 900px) {
+    .app-body { grid-template-columns: 180px minmax(0, 1fr); }
+    .detail {
+      position: fixed; left: 0; right: 0; bottom: 0; top: auto;
+      z-index: 50;
+      max-height: min(78vh, 650px);
+      padding: 22px 18px 28px;
+      border-left: 0; border-top: 1px solid var(--border);
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -14px 44px rgba(0, 0, 0, .18);
+      transform: translateY(105%);
+      transition: transform .22s ease;
+    }
+    .detail.open { transform: translateY(0); }
+    .detail-close { display: grid; }
+    .detail-title-row { padding-right: 30px; }
+  }
+  @media (max-width: 680px) {
+    body {
+      display: block;
+      padding: 0;
+      background: var(--window);
+    }
+    .app {
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .titlebar {
+      min-height: 0;
+      height: auto;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 12px;
+    }
+    .traffic { display: none; }
+    .app-name { font-size: 11.5px; }
+    .search-wrap {
+      flex: 1 1 100%;
+      order: 3;
+      max-width: none;
+      margin-left: 0;
+    }
+    .titlebar-actions { margin-left: auto; }
+    .search-wrap kbd { display: none; }
+    .app-body { display: flex; flex-direction: column; }
+    .sidebar {
+      flex: 0 0 auto;
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 8px 10px;
+      border-right: 0;
+      border-bottom: 1px solid var(--border);
+      scrollbar-width: none;
+    }
+    .sidebar::-webkit-scrollbar { display: none; }
+    .side-label, .side-sep, .install-card { display: none; }
+    .side-item {
+      width: auto; flex: 0 0 auto;
+      padding: 6px 9px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--main);
+      font-size: 10px;
+    }
+    .side-item.active { border-color: var(--accent-border); }
+    .side-item .count { display: none; }
+    #category-nav { flex-direction: row; gap: 6px; flex: 0 0 auto; }
+    .main { flex: 1; }
+    .main-head { padding: 11px 14px 9px; }
+    .main-title { font-size: 17px; }
+    .list { padding: 2px 5px 12px; }
+    .cmd-row { grid-template-columns: 30px minmax(0, 1fr) 26px; padding: 8px 7px; }
+    .row-copy { display: none; }
+    .row-icon { width: 28px; height: 28px; font-size: 7px; }
+    .group-head { padding-left: 7px; padding-right: 7px; }
+    .statusbar { height: 26px; padding: 0 10px; font-size: 8px; }
+    .status-mid, .status-keys { display: none; }
+    .detail { max-height: 84vh; }
+    .toast { bottom: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="titlebar">
+      <div class="traffic" aria-hidden="true"><span class="light red"></span><span class="light yellow"></span><span class="light green"></span></div>
+      <div class="app-id">
+        <span class="app-mark" aria-hidden="true">⌘</span>
+        <span class="app-name">Mac 文件命令</span>
+      </div>
+      <label class="search-wrap" for="search">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="search" type="search" autocomplete="off" spellcheck="false" placeholder="搜索命令、任务或文件类型…" aria-label="搜索命令">
+        <kbd>⌘K</kbd>
+      </label>
+      <div class="titlebar-actions">
+        <button id="theme-toggle" class="icon-btn" type="button" aria-label="切换到深色模式" title="切换深浅色">☾</button>
+        <button id="help-button" class="icon-btn" type="button" aria-label="使用说明" title="使用说明" aria-haspopup="dialog">?</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar" aria-label="命令分类">
+        <div class="side-label">速查</div>
+        <button class="side-item active" type="button" data-view="all">
+          <span class="tag-dot" style="background:#0a84ff"></span>全部命令 <span class="count" id="count-all">26</span>
+        </button>
+        <button class="side-item" type="button" data-view="favorites">
+          <span class="tag-dot" style="background:#ff9f0a"></span>常用 <span class="count" id="count-favorites">0</span>
+        </button>
+        <div class="side-sep"></div>
+        <div class="side-label">分类</div>
+        <div id="category-nav"></div>
+        <button class="install-card" type="button" id="install-card" data-select="install-imagemagick" aria-label="查看 ImageMagick 安装命令">
+          <span class="install-title"><span class="tag-dot" style="background:#af52de"></span>ImageMagick</span>
+          <span class="install-cmd">brew install imagemagick</span>
+        </button>
+      </aside>
+
+      <main class="main" id="main">
+        <div class="main-head">
+          <div>
+            <h1 class="main-title" id="main-title">全部命令</h1>
+            <p class="main-sub" id="main-sub">26 条命令 · 复制前先确认文件名</p>
+          </div>
+          <button class="clear-search" id="clear-search" type="button" hidden>清除搜索</button>
+        </div>
+        <div class="list" id="command-list"></div>
+        <div class="empty-state" id="empty-state" hidden>
+          <div class="empty-icon" aria-hidden="true">⌕</div>
+          <strong id="empty-title">没有找到匹配的命令</strong>
+          <p id="empty-desc">换个关键词，或清空搜索看看全部分类。</p>
+        </div>
+      </main>
+
+      <aside class="detail" id="detail" aria-label="命令详情" aria-live="polite">
+        <button class="detail-close" id="detail-close" type="button" aria-label="关闭详情">×</button>
+        <div id="detail-content"></div>
+      </aside>
+    </div>
+
+    <footer class="statusbar">
+      <span class="status-left"><span class="status-dot"></span><span id="status-count">26 条命令 · 离线可用</span></span>
+      <span class="status-mid">基于 mac_daily_use.md 整理 · sips / ImageMagick / join / qpdf 已实测</span>
+      <span class="status-keys">⌘K 搜索 · Esc 清空</span>
+    </footer>
+  </div>
+
+  <div class="sheet-backdrop" id="sheet-backdrop"></div>
+
+  <div class="modal" id="help-modal" hidden role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h2 class="modal-title" id="help-title">使用说明</h2>
+          <p class="modal-sub">这些命令都在终端里运行。先进入文件所在文件夹，或直接把文件从访达拖进终端。</p>
+        </div>
+        <button class="modal-close" id="help-close" type="button" aria-label="关闭使用说明">×</button>
+      </div>
+      <div class="help-list">
+        <div class="help-item"><code>*.jpg</code><span>当前目录里的所有 JPG 文件。</span></div>
+        <div class="help-item"><code>"$f"</code><span>循环里的当前文件。加引号，文件名带空格也不会出错。</span></div>
+        <div class="help-item"><code>${f%.png}.jpg</code><span>去掉 <code>.png</code> 后缀，换成 <code>.jpg</code>，用来生成新文件名。</span></div>
+        <div class="help-item"><code>--out</code><span>另存为新文件。没有它时，有些命令会覆盖原图。</span></div>
+        <div class="help-item"><code>source ~/.zshrc</code><span>让新加到 <code>~/.zshrc</code> 的别名立即生效。</span></div>
+      </div>
+      <div class="help-warning">批量、改名和 <code>mv</code> 命令没有撤销键。先运行 <code>pwd</code> 和 <code>ls</code> 确认目录，最好在副本文件夹里试。</div>
+      <p class="help-source">本页基于 <code>mac_daily_use.md</code> 整理，并修正了几条在 macOS 26 上不可用或不准确的写法。sips、ImageMagick、join、qpdf 命令已在本机 macOS 26.6.2 实测；Ghostscript 命令需要先安装。</p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const CATEGORIES = [
+      { id: 'image', name: '图片格式', color: '#34c759', desc: '格式转换、信息查看与旋转' },
+      { id: 'resize', name: '尺寸与压缩', color: '#5e5ce6', desc: '尺寸调整、体积压缩与批量缩放' },
+      { id: 'compose', name: '拼接与透明', color: '#ff375f', desc: '拼接、透明底与水印' },
+      { id: 'pdf', name: 'PDF', color: '#ff9f0a', desc: '合并、图片转 PDF 与压缩' },
+      { id: 'batch', name: '批量与效率', color: '#8e8e93', desc: '重命名、别名与目录检查' },
+      { id: 'setup', name: '安装与说明', color: '#af52de', desc: 'Homebrew、ImageMagick 与 Ghostscript' }
+    ];
+
+    const TOOL_META = {
+      sips: { label: '原生 sips', short: '原生', cls: 'native' },
+      system: { label: '系统自带', short: '原生', cls: 'native' },
+      shell: { label: '终端', short: '终端', cls: 'neutral' },
+      magick: { label: 'ImageMagick', short: '需安装', cls: 'install' },
+      qpdf: { label: 'qpdf', short: '需安装', cls: 'install' },
+      ghostscript: { label: 'Ghostscript', short: '需安装', cls: 'install' },
+      brew: { label: 'Homebrew', short: '需安装', cls: 'install' }
+    };
+
+    const COMMANDS = [
+      {
+        id: 'png-to-jpg', cat: 'image', icon: 'PNG', title: 'PNG → JPG',
+        desc: '转换格式，质量 85 平衡体积与画质',
+        tool: 'sips',
+        command: 'sips -s format jpeg -s formatOptions 85 input.png --out output.jpg',
+        keywords: 'png jpg jpeg 格式 转换 图片 压缩',
+        params: [['-s format jpeg', '输出格式'], ['-s formatOptions 85', 'JPEG 质量（0–100）'], ['--out', '另存为新文件']],
+        note: '去掉 `-s formatOptions 85` 就用默认质量；原图不会被改动。'
+      },
+      {
+        id: 'heic-to-jpg', cat: 'image', icon: 'HEIC', title: 'HEIC → JPG',
+        desc: '把 iPhone 照片转成通用格式',
+        tool: 'sips',
+        command: 'sips -s format jpeg input.heic --out output.jpg',
+        keywords: 'heic iphone 照片 jpg 转换',
+        params: [['-s format jpeg', '输出 JPG'], ['--out', '另存新文件']],
+        note: 'HEIC 原图保留；批量转换可以把文件名换成 `*.heic` 后用循环。'
+      },
+      {
+        id: 'image-info', cat: 'image', icon: 'IMG', title: '查看图片信息',
+        desc: '尺寸、DPI、色彩空间和透明通道一次看全',
+        tool: 'sips',
+        command: 'sips -g all input.jpg',
+        keywords: '查看 信息 尺寸 dpi 色彩 空间 透明',
+        params: [['-g all', '显示全部属性'], ['input.jpg', '要查看的图片']],
+        note: '只读操作，不会改文件。'
+      },
+      {
+        id: 'rotate-image', cat: 'image', icon: 'JPG', title: '顺时针旋转 90°',
+        desc: '修正手机照片的横向问题',
+        tool: 'sips',
+        command: 'sips -r 90 input.jpg --out output.jpg',
+        keywords: '旋转 90 方向 照片 横向',
+        params: [['-r 90', '顺时针旋转 90°'], ['--out', '另存新文件']],
+        note: '逆时针用 `-r -90`；先另存再对比，避免覆盖原图。'
+      },
+      {
+        id: 'batch-png-to-jpg', cat: 'image', icon: 'SH', title: '批量 PNG → JPG',
+        desc: '当前目录所有 PNG 各生成一个同名 JPG',
+        tool: 'sips', warning: true,
+        command: 'for f in *.png; do sips -s format jpeg -s formatOptions 85 "$f" --out "${f%.png}.jpg"; done',
+        keywords: '批量 png jpg 转换 循环 for',
+        params: [['for f in *.png', '遍历当前目录的 PNG'], ['"$f"', '当前文件名，引号防止空格出错'], ['${f%.png}.jpg', '去掉 .png 换成 .jpg'], ['--out', '另存新文件']],
+        note: '先 `cd` 到目标文件夹，用 `ls *.png` 确认范围；不会删除原图。'
+      },
+
+      {
+        id: 'resize-width', cat: 'resize', icon: 'JPG', title: '宽度缩到 800px',
+        desc: '高度按比例自动缩放，适合发网页或聊天',
+        tool: 'sips',
+        command: 'sips --resampleWidth 800 input.jpg --out output.jpg',
+        keywords: '宽度 800 缩放 尺寸 压缩',
+        params: [['--resampleWidth 800', '目标宽度 800px'], ['--out', '另存新文件']],
+        note: '小图也会被放大到 800px；只想缩不放用「最长边」里的 ImageMagick 写法。'
+      },
+      {
+        id: 'resize-height', cat: 'resize', icon: 'JPG', title: '高度设为 600px',
+        desc: '宽度按比例自动缩放，适合固定高度版式',
+        tool: 'sips',
+        command: 'sips --resampleHeight 600 input.jpg --out output.jpg',
+        keywords: '高度 600 缩放 尺寸',
+        params: [['--resampleHeight 600', '目标高度 600px'], ['--out', '另存新文件']],
+        note: '这是“精确 600”，不是“不超过 600”；同样会放大小图。'
+      },
+      {
+        id: 'resize-max', cat: 'resize', icon: 'JPG', title: '最长边限制到 600px',
+        desc: '宽高按比例缩放，让最长边等于 600px',
+        tool: 'sips',
+        command: 'sips -Z 600 input.jpg --out output.jpg',
+        keywords: '最长边 限制 600 缩放 尺寸',
+        params: [['-Z 600', '最长边 600px'], ['--out', '另存新文件']],
+        note: 'sips 的 `-Z` 也会放大小图。要“只缩不放”，用下面的 ImageMagick 写法。',
+        variants: [{
+          label: '只缩不放（ImageMagick）',
+          command: "magick input.jpg -resize '1600x1600>' output.jpg",
+          note: '`>` 表示只在超过 1600px 时缩放；去掉 `>` 会强制放大。'
+        }]
+      },
+      {
+        id: 'crop-fixed', cat: 'resize', icon: 'JPG', title: '强制缩放为 800×600',
+        desc: '精确改成 800×600，可能拉伸变形',
+        tool: 'sips',
+        command: 'sips -z 600 800 input.jpg --out output.jpg',
+        keywords: '固定 尺寸 800 600 拉伸 裁剪',
+        params: [['-z 600 800', '高度 600、宽度 800'], ['--out', '另存新文件']],
+        note: '参数顺序是“高 宽”。想裁剪而不是拉伸，用 `sips -c 600 800 input.jpg --out output.jpg`（居中裁剪）。'
+      },
+      {
+        id: 'compress-jpeg', cat: 'resize', icon: 'JPG', title: '压缩 JPEG 体积',
+        desc: '重编码降低质量，快速减小文件体积',
+        tool: 'sips',
+        command: 'sips -s format jpeg -s formatOptions 70 input.jpg --out output.jpg',
+        keywords: '压缩 体积 质量 70 jpeg',
+        params: [['-s formatOptions 70', '质量 70，数值越低越小'], ['--out', '另存新文件']],
+        note: '会重新压缩；不要对同一张图反复执行，画质会累积损失。'
+      },
+      {
+        id: 'batch-resize', cat: 'resize', icon: 'SH', title: '批量缩图到 1600px',
+        desc: '当前目录所有 JPG 宽度缩到 1600px',
+        tool: 'sips', warning: true,
+        command: 'for f in *.jpg; do sips --resampleWidth 1600 "$f" --out "resized_$f"; done',
+        keywords: '批量 缩放 尺寸 1600 jpg 循环',
+        params: [['for f in *.jpg', '遍历当前目录的 JPG'], ['"$f"', '当前文件名'], ['resized_$f', '输出文件名加前缀'], ['--out', '另存新文件']],
+        note: '先 `ls *.jpg` 确认范围；输出文件会多一份，原图保留。'
+      },
+
+      {
+        id: 'append-vertical', cat: 'compose', icon: 'IMG', title: '上下拼接两张图',
+        desc: '按顺序垂直拼接，适合长截图',
+        tool: 'magick',
+        command: 'magick top.jpg bottom.jpg -append output.jpg',
+        keywords: '拼接 上下 垂直 append 图片',
+        params: [['-append', '垂直拼接'], ['输入顺序', '先 top 后 bottom']],
+        note: '两张图宽度不同时，建议用下一条补白居中的写法。'
+      },
+      {
+        id: 'append-vertical-pad', cat: 'compose', icon: 'IMG', title: '上下拼接（不同宽度补白）',
+        desc: '宽度不同时自动补白并居中',
+        tool: 'magick',
+        command: 'magick top.jpg bottom.jpg -background white -gravity center -append output.jpg',
+        keywords: '拼接 上下 补白 居中 不同宽度',
+        params: [['-background white', '补边颜色'], ['-gravity center', '内容居中'], ['-append', '垂直拼接']],
+        note: '把 `white` 换成其他颜色即可换底色。'
+      },
+      {
+        id: 'append-horizontal', cat: 'compose', icon: 'IMG', title: '左右拼接两张图',
+        desc: '按顺序水平拼接，适合对比图',
+        tool: 'magick',
+        command: 'magick left.jpg right.jpg +append output.jpg',
+        keywords: '拼接 左右 水平 append 图片',
+        params: [['+append', '水平拼接'], ['输入顺序', '先 left 后 right']],
+        note: '高度不同时可以加 `-background white -gravity center` 补白。'
+      },
+      {
+        id: 'transparent-to-white', cat: 'compose', icon: 'PNG', title: '透明 PNG 转白底 JPG',
+        desc: '透明区域填白，避免 JPG 出现黑底',
+        tool: 'magick',
+        command: 'magick input.png -background white -alpha remove -alpha off output.jpg',
+        keywords: '透明 背景 png jpg 白底 alpha',
+        params: [['-background white', '填充颜色'], ['-alpha remove', '移除透明通道'], ['-alpha off', '关闭 alpha']],
+        note: '想换底色改 `-background` 的值；这条是源文档里“防黑底”的修正版。'
+      },
+      {
+        id: 'watermark', cat: 'compose', icon: 'SH', title: '批量加水印',
+        desc: '给当前目录所有 JPG 右下角加文字水印',
+        tool: 'magick', warning: true,
+        command: 'for f in *.jpg; do magick "$f" -gravity southeast -font "/System/Library/Fonts/Supplemental/Arial.ttf" -fill white -pointsize 36 -annotate +10+10 "Copyright" "watermarked_$f"; done',
+        keywords: '水印 批量 文字 copyright 右下角',
+        params: [['-gravity southeast', '右下角'], ['-font .../Arial.ttf', '显式指定字体'], ['-annotate +10+10', '文字偏移'], ['watermarked_$f', '输出文件名']],
+        note: '源文档的命令缺字体会报错；这里显式指定 Arial。中文水印可把字体换成 `/System/Library/Fonts/PingFang.ttc`。先拿一张图试位置。'
+      },
+
+      {
+        id: 'merge-pdf-native', cat: 'pdf', icon: 'PDF', title: '合并 PDF（系统自带）',
+        desc: '用 Automator 自带的 join 工具按顺序合并',
+        tool: 'system',
+        command: '/System/Library/Automator/Combine\\ PDF\\ Pages.action/Contents/MacOS/join -o output.pdf 1.pdf 2.pdf',
+        keywords: '合并 pdf join automator 系统自带',
+        params: [['-o output.pdf', '输出文件'], ['1.pdf 2.pdf', '按顺序列出输入文件']],
+        note: '路径很长，建议做成别名；文件名有空格时加引号。已在 macOS 26 上实测可用。',
+        variants: [{
+          label: 'qpdf 写法（更短，需安装）',
+          command: 'qpdf --empty --pages 1.pdf 2.pdf -- output.pdf',
+          note: '安装：`brew install qpdf`；支持页范围，例如 `1.pdf 1-3 2.pdf`。'
+        }]
+      },
+      {
+        id: 'images-to-pdf', cat: 'pdf', icon: 'PDF', title: '多张图片合成 PDF',
+        desc: '按文件名顺序把当前目录所有 JPG 合成一个 PDF',
+        tool: 'magick',
+        command: 'magick *.jpg output.pdf',
+        keywords: '图片 pdf 合成 多张 jpg',
+        params: [['*.jpg', '输入图片，按文件名排序'], ['output.pdf', '输出 PDF']],
+        note: '文件名建议用 01.jpg、02.jpg…，否则 10.jpg 会排在 2.jpg 前面。源文档里的 `sips *.jpg --out temp.pdf` 多文件会报错，不要用。'
+      },
+      {
+        id: 'single-image-to-pdf', cat: 'pdf', icon: 'PDF', title: '单张图片转 PDF',
+        desc: '不装 ImageMagick 也能把一张图片转成 PDF',
+        tool: 'sips',
+        command: 'sips -s format pdf input.jpg --out output.pdf',
+        keywords: '单张 图片 pdf 转换 sips',
+        params: [['-s format pdf', '输出 PDF'], ['--out', '另存新文件']],
+        note: '一次只能指定一个输出文件；多张图片请用上一条 ImageMagick 写法。'
+      },
+      {
+        id: 'compress-pdf', cat: 'pdf', icon: 'PDF', title: '压缩 PDF 体积',
+        desc: '把大 PDF 压到适合邮件发送的体积',
+        tool: 'ghostscript',
+        command: 'gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dBATCH -sOutputFile=output.pdf input.pdf',
+        keywords: '压缩 pdf 体积 ghostscript gs ebook',
+        params: [['-dPDFSETTINGS=/ebook', '适合阅读的压缩档'], ['-dCompatibilityLevel=1.4', '兼容性'], ['-sOutputFile', '输出文件']],
+        note: '先 `brew install ghostscript`。`/screen` 更小但画质更低；源文档里的 `.quartzfilter` 直接执行在 macOS 26 上不可用。也可以直接用“预览”导出时选“降低文件大小”。'
+      },
+
+      {
+        id: 'check-directory', cat: 'batch', icon: 'SH', title: '确认当前目录',
+        desc: '运行批量命令前，先确认自己在正确的文件夹',
+        tool: 'shell',
+        command: 'pwd; ls',
+        keywords: '目录 当前 文件夹 pwd ls 检查',
+        params: [['pwd', '显示当前路径'], ['ls', '列出当前文件']],
+        note: '`cd ~/Desktop` 去桌面，`cd ..` 回上一级。'
+      },
+      {
+        id: 'rename-date', cat: 'batch', icon: 'SH', title: '批量加日期前缀',
+        desc: '给当前目录所有 PNG 加上今天日期前缀',
+        tool: 'shell', warning: true,
+        command: 'for f in *.png; do mv "$f" "$(date +%Y-%m-%d)_$f"; done',
+        keywords: '批量 重命名 日期 前缀 mv',
+        params: [['$(date +%Y-%m-%d)', '今天的日期'], ['mv', '直接改名，不备份'], ['"$f"', '当前文件名']],
+        note: '先 `ls *.png` 确认范围；这是破坏性操作，建议先在副本文件夹试。源文档里的日期是写死的，这里改成当天日期。'
+      },
+      {
+        id: 'alias-p2j', cat: 'batch', icon: 'SH', title: '创建快捷别名',
+        desc: '以后用 p2j input.png --out output.jpg 代替长命令',
+        tool: 'shell',
+        command: "alias p2j='sips -s format jpeg -s formatOptions 85'",
+        keywords: '别名 alias zshrc 快捷 命令',
+        params: [['alias', '创建别名'], ['p2j', '别名名称'], ['~/.zshrc', '写入这里可长期生效']],
+        note: '把这一行加到 `~/.zshrc`，再运行 `source ~/.zshrc`。只在当前终端生效的话，直接运行即可。'
+      },
+
+      {
+        id: 'install-imagemagick', cat: 'setup', icon: 'IM', title: '安装 ImageMagick',
+        desc: '拼接、水印、透明底、图片转 PDF 都靠它',
+        tool: 'brew',
+        command: 'brew install imagemagick',
+        keywords: '安装 imagemagick brew 拼接 水印 透明',
+        params: [['brew install', '用 Homebrew 安装']],
+        note: 'ImageMagick 7 用 `magick` 命令；6 用 `convert`。源文档里的“Mac 7 版本”是笔误，指的是 ImageMagick 7。'
+      },
+      {
+        id: 'check-imagemagick', cat: 'setup', icon: 'IM', title: '检查 ImageMagick',
+        desc: '能输出版本号就说明 ImageMagick 可用',
+        tool: 'magick',
+        command: 'magick -version',
+        keywords: '检查 版本 imagemagick magick',
+        params: [['magick -version', '查看版本']],
+        note: '提示 command not found 就先运行上面的安装命令。'
+      },
+      {
+        id: 'install-ghostscript', cat: 'setup', icon: 'PDF', title: '安装 Ghostscript',
+        desc: '用于可靠地压缩 PDF',
+        tool: 'brew',
+        command: 'brew install ghostscript',
+        keywords: '安装 ghostscript gs pdf 压缩',
+        params: [['brew install', '用 Homebrew 安装']],
+        note: '不装也可以用“预览”导出时选“降低文件大小”，只是不能命令行批量处理。'
+      }
+    ];
+
+    const FAV_KEY = 'mac-file-commands:favorites';
+    const THEME_KEY = 'mac-file-commands:theme';
+    const MOBILE_QUERY = matchMedia('(max-width: 900px)');
+
+    const state = {
+      view: 'all',
+      query: '',
+      selectedId: 'png-to-jpg',
+      favorites: loadFavorites()
+    };
+
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const listEl = $('#command-list');
+    const emptyEl = $('#empty-state');
+    const detailEl = $('#detail');
+    const detailContent = $('#detail-content');
+    const searchEl = $('#search');
+    const mainTitle = $('#main-title');
+    const mainSub = $('#main-sub');
+    const clearSearchBtn = $('#clear-search');
+    const backdrop = $('#sheet-backdrop');
+    const helpModal = $('#help-modal');
+    const toastEl = $('#toast');
+    let toastTimer = null;
+    let lastFocus = null;
+
+    function category(id) { return CATEGORIES.find(item => item.id === id); }
+    function commandById(id) { return COMMANDS.find(item => item.id === id); }
+    function esc(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[char]));
+    }
+    function fmt(value) {
+      return esc(value).replace(/`([^`]+)`/g, '<code>$1</code>');
+    }
+    function toolMeta(tool) { return TOOL_META[tool] || TOOL_META.shell; }
+    function toolBadge(tool) {
+      const meta = toolMeta(tool);
+      return `<span class="badge ${meta.cls}">${meta.short}</span>`;
+    }
+    function toolPill(tool) {
+      const meta = toolMeta(tool);
+      return `<span class="badge ${meta.cls}">${meta.label}</span>`;
+    }
+
+    function loadFavorites() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
+        if (!Array.isArray(parsed)) return [];
+        return parsed.filter(id => COMMANDS.some(command => command.id === id));
+      } catch (e) { return []; }
+    }
+    function saveFavorites() {
+      try { localStorage.setItem(FAV_KEY, JSON.stringify(state.favorites)); } catch (e) {}
+    }
+    function isFavorite(id) { return state.favorites.includes(id); }
+
+    function commandHaystack(command) {
+      const cat = category(command.cat);
+      const variants = (command.variants || []).map(v => `${v.label} ${v.command} ${v.note || ''}`).join(' ');
+      return [command.title, command.desc, command.command, command.keywords, cat.name, variants]
+        .join(' ').toLowerCase();
+    }
+    function matchesQuery(command, terms) {
+      const hay = commandHaystack(command);
+      return terms.every(term => hay.includes(term));
+    }
+    function visibleCommands() {
+      const query = state.query.trim().toLowerCase();
+      if (query) {
+        const terms = query.split(/\s+/).filter(Boolean);
+        return COMMANDS.filter(command => matchesQuery(command, terms));
+      }
+      if (state.view === 'all') return COMMANDS;
+      if (state.view === 'favorites') return COMMANDS.filter(command => isFavorite(command.id));
+      return COMMANDS.filter(command => command.cat === state.view);
+    }
+
+    function groupByCategory(commands) {
+      return CATEGORIES.map(cat => ({
+        cat,
+        items: commands.filter(command => command.cat === cat.id)
+      })).filter(group => group.items.length);
+    }
+
+    function renderCategoryNav() {
+      $('#category-nav').innerHTML = CATEGORIES.map(cat => {
+        const count = COMMANDS.filter(command => command.cat === cat.id).length;
+        return `<button class="side-item" type="button" data-view="${cat.id}">
+          <span class="tag-dot" style="background:${cat.color}"></span>${cat.name}
+          <span class="count">${count}</span>
+        </button>`;
+      }).join('');
+    }
+
+    function updateSidebar() {
+      $('#count-all').textContent = COMMANDS.length;
+      $('#count-favorites').textContent = state.favorites.length;
+      $$('.side-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.view === state.view && !state.query.trim());
+      });
+    }
+
+    function updateHeader(count) {
+      if (state.query.trim()) {
+        mainTitle.textContent = '搜索结果';
+        mainSub.textContent = `${count} 条匹配“${state.query}” · 普通包含匹配`;
+        clearSearchBtn.hidden = false;
+        return;
+      }
+      clearSearchBtn.hidden = true;
+      if (state.view === 'all') {
+        mainTitle.textContent = '全部命令';
+        mainSub.textContent = `${count} 条命令 · 复制前先确认文件名`;
+      } else if (state.view === 'favorites') {
+        mainTitle.textContent = '常用';
+        mainSub.textContent = count ? `${count} 条已收藏 · 点击 ★ 可取消` : '点击命令右侧的 ☆ 收藏';
+      } else {
+        const cat = category(state.view);
+        mainTitle.textContent = cat.name;
+        mainSub.textContent = `${count} 条命令 · ${cat.desc}`;
+      }
+    }
+
+    function emptyContent() {
+      if (state.query.trim()) return ['没有找到匹配的命令', '换个关键词，或清空搜索看看全部分类。'];
+      if (state.view === 'favorites') return ['还没有收藏的命令', '点击命令右侧的 ☆，常用的命令会出现在这里。'];
+      return ['这个分类还没有命令', '换个分类看看。'];
+    }
+
+    function rowTemplate(command) {
+      const cat = category(command.cat);
+      const favorite = isFavorite(command.id);
+      const selected = command.id === state.selectedId;
+      return `<div class="cmd-row ${selected ? 'selected' : ''}" data-id="${command.id}" data-cat="${command.cat}" role="button" tabindex="0" aria-label="查看 ${esc(command.title)} 命令">
+        <span class="row-icon" style="--cat:${cat.color}">${esc(command.icon)}</span>
+        <span class="row-main">
+          <span class="row-title">${esc(command.title)} ${toolBadge(command.tool)}</span>
+          <span class="row-desc">${esc(command.desc)}</span>
+          <code class="row-cmd">${esc(command.command)}</code>
+        </span>
+        <button class="row-copy" type="button" data-copy="${command.id}" aria-label="复制 ${esc(command.title)} 命令">复制</button>
+        <button class="star ${favorite ? 'active' : ''}" type="button" data-star="${command.id}" aria-label="${favorite ? '取消收藏' : '收藏'} ${esc(command.title)}" aria-pressed="${favorite}">${favorite ? '★' : '☆'}</button>
+      </div>`;
+    }
+
+    function listTemplate(commands) {
+      if (!commands.length) return '';
+      if (state.view === 'all' || state.query || state.view === 'favorites') {
+        return groupByCategory(commands).map(group => `
+          <div class="group-head">
+            <span class="tag-dot" style="background:${group.cat.color}"></span>${group.cat.name}
+            <span class="group-count">${group.items.length}</span>
+          </div>
+          ${group.items.map(rowTemplate).join('')}
+        `).join('');
+      }
+      return commands.map(rowTemplate).join('');
+    }
+
+    function detailTemplate(command) {
+      if (!command) {
+        return `<div class="detail-placeholder">
+          <div class="empty-icon" aria-hidden="true">⌕</div>
+          <strong>没有可显示的命令</strong>
+          <p>清空搜索或换个分类试试。</p>
+        </div>`;
+      }
+      const cat = category(command.cat);
+      const favorite = isFavorite(command.id);
+      const params = (command.params || []).map(([code, meaning]) => `
+        <div class="param"><code>${esc(code)}</code><span>${esc(meaning)}</span></div>
+      `).join('');
+      const variants = (command.variants || []).map(variant => `
+        <div class="variant">
+          <div class="variant-label">${esc(variant.label)}</div>
+          <div class="code-card">
+            <div class="code-head"><span>替代写法</span><button class="code-copy" type="button" data-copy="${command.id}">复制</button></div>
+            <pre class="detail-code">${esc(variant.command)}</pre>
+          </div>
+          ${variant.note ? `<div class="variant-note">${fmt(variant.note)}</div>` : ''}
+        </div>
+      `).join('');
+      return `
+        <div class="detail-kicker">命令详情</div>
+        <div class="detail-title-row">
+          <span class="detail-icon" style="--cat:${cat.color}">${esc(command.icon)}</span>
+          <div>
+            <h2 class="detail-title">${esc(command.title)}</h2>
+            <div class="detail-sub">${cat.name} · ${toolMeta(command.tool).label}</div>
+          </div>
+        </div>
+        <div class="badges">${toolPill(command.tool)}${command.warning ? '<span class="badge install">批量 / 破坏性</span>' : ''}</div>
+        <div class="detail-actions">
+          <button class="btn primary" type="button" data-copy="${command.id}">复制命令</button>
+          <button class="btn ghost ${favorite ? 'active' : ''}" type="button" data-star="${command.id}" aria-pressed="${favorite}">${favorite ? '★ 已收藏' : '☆ 收藏'}</button>
+        </div>
+        <p class="detail-desc">${esc(command.desc)}</p>
+        <div class="section-label">终端命令</div>
+        <div class="code-card">
+          <div class="code-head"><span>zsh</span><button class="code-copy" type="button" data-copy="${command.id}">复制</button></div>
+          <pre class="detail-code">${esc(command.command)}</pre>
+        </div>
+        <div class="section-label">参数怎么看</div>
+        <div class="params">${params}</div>
+        <div class="note ${command.warning ? 'warn' : ''}">${fmt(command.note || '')}</div>
+        ${variants ? `<div class="section-label">替代写法</div><div class="variants">${variants}</div>` : ''}
+        <div class="detail-footnote">复制后粘贴到终端，按回车执行；命令里的 <code>input.jpg</code> 换成你的文件名。</div>
+      `;
+    }
+
+    function render(options = {}) {
+      const commands = visibleCommands();
+      if (!commands.some(command => command.id === state.selectedId)) {
+        state.selectedId = commands[0] ? commands[0].id : null;
+      }
+      const count = commands.length;
+      updateSidebar();
+      updateHeader(count);
+      listEl.innerHTML = listTemplate(commands);
+      emptyEl.hidden = count !== 0;
+      if (!count) {
+        const [title, desc] = emptyContent();
+        $('#empty-title').textContent = title;
+        $('#empty-desc').textContent = desc;
+      }
+      detailContent.innerHTML = detailTemplate(commandById(state.selectedId));
+      $('#status-count').textContent = `${COMMANDS.length} 条命令 · 离线可用`;
+      if (typeof options.scrollTop === 'number') {
+        listEl.scrollTop = options.scrollTop;
+      }
+      syncDetailAccessibility();
+    }
+
+    function selectCommand(id, options = {}) {
+      if (!commandById(id)) return;
+      state.selectedId = id;
+      render({ scrollTop: listEl.scrollTop });
+      if (options.openSheet !== false && MOBILE_QUERY.matches) openDetailSheet();
+    }
+
+    function setView(view) {
+      state.view = view;
+      state.query = '';
+      searchEl.value = '';
+      render({ scrollTop: 0 });
+    }
+
+    function toggleFavorite(id) {
+      if (!commandById(id)) return;
+      const scrollTop = listEl.scrollTop;
+      state.favorites = isFavorite(id)
+        ? state.favorites.filter(item => item !== id)
+        : [...state.favorites, id];
+      saveFavorites();
+      render({ scrollTop });
+    }
+
+    function openDetailSheet() {
+      detailEl.classList.add('open');
+      backdrop.classList.add('show');
+      document.body.classList.add('sheet-open');
+      syncDetailAccessibility();
+    }
+    function closeDetailSheet() {
+      const selectedRow = $(`.cmd-row[data-id="${state.selectedId}"]`);
+      detailEl.classList.remove('open');
+      backdrop.classList.remove('show');
+      document.body.classList.remove('sheet-open');
+      syncDetailAccessibility();
+      if (MOBILE_QUERY.matches && selectedRow) selectedRow.focus();
+    }
+    function syncDetailAccessibility() {
+      if (MOBILE_QUERY.matches && !detailEl.classList.contains('open')) {
+        detailEl.setAttribute('aria-hidden', 'true');
+        detailEl.setAttribute('inert', '');
+      } else {
+        detailEl.removeAttribute('aria-hidden');
+        detailEl.removeAttribute('inert');
+      }
+    }
+
+    function showToast(message) {
+      toastEl.textContent = message;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+    }
+
+    function fallbackCopy(text) {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.left = '-9999px';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      area.setSelectionRange(0, area.value.length);
+      const copied = document.execCommand('copy');
+      area.remove();
+      if (!copied) throw new Error('copy failed');
+    }
+
+    async function copyCommand(id) {
+      const command = commandById(id);
+      if (!command) return;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(command.command);
+        } else {
+          fallbackCopy(command.command);
+        }
+        showToast(`已复制：${command.title}`);
+        flashCopied(id);
+      } catch (error) {
+        try {
+          fallbackCopy(command.command);
+          showToast(`已复制：${command.title}`);
+          flashCopied(id);
+        } catch (secondError) {
+          showToast('复制失败，请手动选择命令');
+        }
+      }
+    }
+
+    function flashCopied(id) {
+      $$(`[data-copy="${id}"]`).forEach(button => {
+        const previous = button.textContent;
+        button.textContent = '已复制';
+        setTimeout(() => { if (button.isConnected) button.textContent = previous; }, 1300);
+      });
+    }
+
+    function clearSearch() {
+      state.query = '';
+      searchEl.value = '';
+      render({ scrollTop: 0 });
+      searchEl.focus();
+    }
+
+    function openHelp() {
+      lastFocus = document.activeElement;
+      helpModal.hidden = false;
+      document.body.classList.add('sheet-open');
+      $('#help-close').focus();
+    }
+    function closeHelp() {
+      helpModal.hidden = true;
+      if (!detailEl.classList.contains('open')) document.body.classList.remove('sheet-open');
+      if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+    }
+
+    function applyTheme(theme) {
+      const next = theme === 'dark' ? 'dark' : 'light';
+      document.documentElement.dataset.theme = next;
+      const button = $('#theme-toggle');
+      button.textContent = next === 'dark' ? '☀' : '☾';
+      button.setAttribute('aria-label', next === 'dark' ? '切换到浅色模式' : '切换到深色模式');
+      button.title = next === 'dark' ? '切换到浅色模式' : '切换到深色模式';
+    }
+    function toggleTheme() {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+    }
+
+    renderCategoryNav();
+    applyTheme(document.documentElement.dataset.theme);
+    render();
+
+    document.addEventListener('click', event => {
+      const star = event.target.closest('[data-star]');
+      if (star) {
+        event.stopPropagation();
+        toggleFavorite(star.dataset.star);
+        return;
+      }
+      const copy = event.target.closest('[data-copy]');
+      if (copy) {
+        event.stopPropagation();
+        copyCommand(copy.dataset.copy);
+        return;
+      }
+      const view = event.target.closest('[data-view]');
+      if (view) {
+        setView(view.dataset.view);
+        return;
+      }
+      const select = event.target.closest('[data-select]');
+      if (select) {
+        state.query = '';
+        searchEl.value = '';
+        state.view = 'setup';
+        render({ scrollTop: 0 });
+        selectCommand(select.dataset.select);
+        return;
+      }
+      const row = event.target.closest('.cmd-row');
+      if (row) {
+        selectCommand(row.dataset.id);
+      }
+    });
+
+    document.addEventListener('keydown', event => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        searchEl.focus();
+        searchEl.select();
+        return;
+      }
+      if (event.key === 'Escape') {
+        if (!helpModal.hidden) { closeHelp(); return; }
+        if (detailEl.classList.contains('open')) { closeDetailSheet(); return; }
+        if (searchEl.value) { clearSearch(); return; }
+        if (document.activeElement === searchEl) searchEl.blur();
+        return;
+      }
+      const row = event.target.closest && event.target.closest('.cmd-row');
+      if (row && (event.key === 'Enter' || event.key === ' ')) {
+        event.preventDefault();
+        selectCommand(row.dataset.id);
+      }
+    });
+
+    searchEl.addEventListener('input', () => {
+      state.query = searchEl.value.trim();
+      render({ scrollTop: 0 });
+    });
+    clearSearchBtn.addEventListener('click', clearSearch);
+    $('#theme-toggle').addEventListener('click', toggleTheme);
+    $('#help-button').addEventListener('click', openHelp);
+    $('#help-close').addEventListener('click', closeHelp);
+    helpModal.addEventListener('click', event => { if (event.target === helpModal) closeHelp(); });
+    $('#detail-close').addEventListener('click', closeDetailSheet);
+    backdrop.addEventListener('click', closeDetailSheet);
+    MOBILE_QUERY.addEventListener('change', () => {
+      if (!MOBILE_QUERY.matches) closeDetailSheet();
+      syncDetailAccessibility();
+    });
+  </script>
+</body>
+</html>
